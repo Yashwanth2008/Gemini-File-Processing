@@ -1,61 +1,52 @@
 import React, { useState } from "react";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import Button from "./components/Button";
 import "./App.css";
 
 function App() {
   const [response, setResponse] = useState("");
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setSelectedImage(event.target.result.split(",")[1]);
-      };
-      reader.readAsDataURL(file);
-    }
+    setSelectedFile(file);
   };
 
   const handleGenerate = async () => {
-    if (!selectedImage) {
-      alert("Please upload an image first!");
+    if (!selectedFile) {
+      alert("Please upload a PDF file first!");
       return;
     }
 
-    const genAI = new GoogleGenerativeAI(
-      "AIzaSyAAwRHDl2BodreDhIZmGGHAX4M1rrEHeKk"
-    );
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-    const imagePart = {
-      inlineData: {
-        data: selectedImage,
-        mimeType: "image/jpeg",
-      },
-    };
-
-    const prompt = "Describe the superhero in this image";
+    const formData = new FormData();
+    formData.append("file", selectedFile);
 
     try {
-      const result = await model.generateContent([prompt, imagePart]);
-      setResponse(result.response.text());
+      const res = await fetch("http://localhost:3000/pdf", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to process the PDF");
+      }
+
+      const data = await res.json();
+      setResponse(data.summary || "No summary generated.");
     } catch (error) {
-      console.error("Error generating content:", error);
-      setResponse("An error occurred while generating content.");
+      console.error("Error processing file:", error);
+      setResponse("An error occurred while summarizing the document.");
     }
   };
 
   return (
     <div className="overall-wrapper">
-      <h1>Generative AI</h1>
+      <h1>Generative AI PDF Summarizer</h1>
       <div className="input-field">
-        <input type="file" onChange={handleFileChange} />
-        <Button functionality={handleGenerate} title={"Generate"} />
+        <input type="file" accept="application/pdf" onChange={handleFileChange} />
+        <Button functionality={handleGenerate} title={"Generate Summary"} />
       </div>
       <div className="response-content">
-        <p>{response || "Your result will appear here."}</p>
+        <p>{response || "Your summary will appear here."}</p>
       </div>
     </div>
   );
