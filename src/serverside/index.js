@@ -11,9 +11,15 @@ const upload = multer({ dest: "uploads/" });
 const genAI = new GoogleGenerativeAI("AIzaSyAAwRHDl2BodreDhIZmGGHAX4M1rrEHeKk");
 
 app.use(cors());
+app.use(express.json()); 
 
 app.post("/pdf", upload.single("file"), async (req, res) => {
   try {
+    const userQuestion = req.body.question;
+    if (!userQuestion) {
+      return res.status(400).json({error: "Question is required"});
+    }
+
     if (!req.file) {
       return res.status(400).json({ error: "No file uploaded" });
     }
@@ -29,7 +35,7 @@ app.post("/pdf", upload.single("file"), async (req, res) => {
           mimeType: "application/pdf",
         },
       },
-      "Summarize the document?",
+      userQuestion,
     ]);
 
     res.json({ summary: result.response.text() });

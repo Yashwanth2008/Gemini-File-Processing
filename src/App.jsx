@@ -17,8 +17,14 @@ function App() {
       return;
     }
 
+    const userQuestion = document.getElementById("user-question").value.trim();
+    if(!userQuestion){
+      console.log("Please ask a question");
+    }
+
     const formData = new FormData();
     formData.append("file", selectedFile);
+    formData.append("question", userQuestion);
 
     try {
       const res = await fetch("http://localhost:3000/pdf", {
@@ -43,7 +49,11 @@ function App() {
       <h1>Generative AI PDF Summarizer</h1>
       <div className="input-field">
         <input type="file" accept="application/pdf" onChange={handleFileChange} />
-        <Button functionality={handleGenerate} title={"Generate Summary"} />
+        {/* <Button functionality={handleGenerate} title={"Generate Summary"} /> */}
+      </div>
+      <div className="question-field">
+        <input type="text" className="question-input" id="user-question" placeholder="Ask Me" />
+        <Button functionality={handleGenerate} title={"Ask"}/>
       </div>
       <div className="response-content">
         <p>{response || "Your summary will appear here."}</p>
