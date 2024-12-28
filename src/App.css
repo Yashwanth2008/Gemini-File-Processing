@@ -23,20 +23,33 @@ body {
 .response-content {
   width: 900px;
   position: relative;
-  top: 50px;
+  top: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .submit-btn {
   width: 90px;
-  height: 35px;
+  height: 42px;
+  position: absolute;
+  right: 513px;
 }
 .question-field {
   display: flex;
   gap: 5px;
 }
 .question-input {
-  width: 545px;
+  width: 760px;
+  height: 28px;
   padding: 5px;
+  font-size: 16px;
+  outline: unset;
+}
+.content-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
 }

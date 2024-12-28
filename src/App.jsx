@@ -18,7 +18,7 @@ function App() {
     }
 
     const userQuestion = document.getElementById("user-question").value.trim();
-    if(!userQuestion){
+    if (!userQuestion) {
       console.log("Please ask a question");
     }
 
@@ -47,16 +47,26 @@ function App() {
   return (
     <div className="overall-wrapper">
       <h1>Generative AI PDF Summarizer</h1>
-      <div className="input-field">
-        <input type="file" accept="application/pdf" onChange={handleFileChange} />
-        {/* <Button functionality={handleGenerate} title={"Generate Summary"} /> */}
-      </div>
-      <div className="question-field">
-        <input type="text" className="question-input" id="user-question" placeholder="Ask Me" />
-        <Button functionality={handleGenerate} title={"Ask"}/>
-      </div>
-      <div className="response-content">
-        <p>{response || "Your summary will appear here."}</p>
+      <div className="content-wrapper">
+        <div className="input-field">
+          <input
+            type="file"
+            accept="application/pdf"
+            onChange={handleFileChange}
+          />
+        </div>
+        <div className="question-field">
+          <input
+            type="text"
+            className="question-input"
+            id="user-question"
+            placeholder="Ask Me"
+          />
+          <Button functionality={handleGenerate} title={"Ask"} />
+        </div>
+        <div className="response-content">
+          <p>{response || "Your summary will appear here."}</p>
+        </div>
       </div>
     </div>
   );
